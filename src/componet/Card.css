@@ -1,0 +1,42 @@
+.container{
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.board{
+  position: relative;
+  margin-top: 150px;
+  height: 350px;
+  width: 500px;
+
+}
+
+.row1, .row2, .row3{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.box{
+  height: 100px;
+  width: 110px;
+  margin: 4px;
+  border-radius: 10px;
+  background-color:white;
+  font-size: 70px;
+  text-align: center;
+  color:rgb(212, 10, 230);
+  font-weight: bold;
+  cursor: pointer;
+}
+button{
+height: 45px;
+width: 120px;
+background-color: black;
+color: white;
+font-weight: bold;
+font-size: 20px;
+border-radius: 15px;
+cursor: pointer;
+}

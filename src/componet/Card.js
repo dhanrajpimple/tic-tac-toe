@@ -1,29 +1,27 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './Card.css';
 import ResetButton from './ResetButton';
-let data = ['', '', '', '', '', '', '', '', ''];
 
 const Card = () => {
-  let [count, setCount] = useState(0);
-  let [lock, setLock] = useState(false);
-  let [winner, setWinner] = useState(null);
+  const [count, setCount] = useState(0);
+  const [lock, setLock] = useState(false);
+  const [winner, setWinner] = useState(null);
+  const [currentPlayer, setCurrentPlayer] = useState('X');
+  const [data, setData] = useState(Array(9).fill(''));
 
-  const toggle = (e, num) => {
-    if (lock || winner) {
+  const toggle = (num) => {
+    if (lock || winner || data[num] !== '') {
       return;
     }
-    if (count % 2 === 0) {
-      e.target.innerHTML = 'X';
-      data[num] = 'X';
-      setCount(++count);
-    } else {
-      e.target.innerHTML = 'O';
-      data[num] = 'O';
-      setCount(++count);
-    }
 
-    // Check for a winner
-    const result = calculateWinner(data);
+    const newData = [...data];
+    newData[num] = currentPlayer;
+    setData(newData);
+    setCount((prevCount) => prevCount + 1);
+
+    setCurrentPlayer((prevPlayer) => (prevPlayer === 'X' ? 'O' : 'X'));
+
+    const result = calculateWinner(newData);
     if (result) {
       setWinner(result);
       setLock(true);
@@ -31,14 +29,10 @@ const Card = () => {
   };
 
   const resetGame = () => {
-    data = ['', '', '', '', '', '', '', '', ''];
+    setData(Array(9).fill(''));
     setCount(0);
     setLock(false);
     setWinner(null);
-
-    // Reset the innerHTML of all boxes
-    const boxes = document.querySelectorAll('.box');
-    boxes.forEach((box) => (box.innerHTML = ''));
   };
 
   function calculateWinner(squares) {
@@ -66,35 +60,32 @@ const Card = () => {
   };
 
   const checkGameOver = () => {
-    if (isBoardFull() && !winner) {
-      
-      return true;
-    }
-    
-    return false;
+    return isBoardFull() && !winner;
   };
+
   return (
     <div className='container'>
-       {winner && <h2 className='winner'>Winner: {winner}</h2>}
-      {checkGameOver() && <h1 className='game-over'>Game Over - No one wins!</h1>}
+      <h2>{`Current Player's Turn: ${currentPlayer}`}</h2>
       <div className='board'>
         <div className='row1'>
-          <div className='box' onClick={(e) => toggle(e, 0)}></div>
-          <div className='box' onClick={(e) => toggle(e, 1)}></div>
-          <div className='box' onClick={(e) => toggle(e, 2)}></div>
+          <div className='box' onClick={() => toggle(0)}>{data[0]}</div>
+          <div className='box' onClick={() => toggle(1)}>{data[1]}</div>
+          <div className='box' onClick={() => toggle(2)}>{data[2]}</div>
         </div>
         <div className='row2'>
-          <div className='box' onClick={(e) => toggle(e, 3)}></div>
-          <div className='box' onClick={(e) => toggle(e, 4)}></div>
-          <div className='box' onClick={(e) => toggle(e, 5)}></div>
+          <div className='box' onClick={() => toggle(3)}>{data[3]}</div>
+          <div className='box' onClick={() => toggle(4)}>{data[4]}</div>
+          <div className='box' onClick={() => toggle(5)}>{data[5]}</div>
         </div>
         <div className='row3'>
-          <div className='box' onClick={(e) => toggle(e, 6)}></div>
-          <div className='box' onClick={(e) => toggle(e, 7)}></div>
-          <div className='box' onClick={(e) => toggle(e, 8)}></div>
+          <div className='box' onClick={() => toggle(6)}>{data[6]}</div>
+          <div className='box' onClick={() => toggle(7)}>{data[7]}</div>
+          <div className='box' onClick={() => toggle(8)}>{data[8]}</div>
         </div>
       </div>
       <ResetButton onClick={resetGame} />
+      {winner && <h2 className='winner'>Winner: {winner}</h2>}
+      {checkGameOver() && <h1 className='game-over'>Game Over - No one wins!</h1>}
     </div>
   );
 };
